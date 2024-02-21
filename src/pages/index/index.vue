@@ -17,6 +17,45 @@
         </view>
       </view>
     </view>
+    <view class="main">
+      <!-- 好友请求 -->
+      <view class="apply">
+        <view class="list-item">
+          <view class="list-item-l">
+            <view class="tip">9</view>
+            <image
+              src="../../static/images/index/apply.png"
+              mode="scaleToFill"
+            />
+          </view>
+          <view class="list-item-r">
+            <view class="top">
+              <text class="name">好友请求</text>
+              <text class="time">上午7:25</text>
+            </view>
+            <view class="news">茫茫人海，相聚即是缘分</view>
+          </view>
+        </view>
+      </view>
+      <!-- 好友聊天列表 -->
+      <view class="friends-list">
+        <view class="list-item">
+          <view class="list-item-l">
+            <view class="tip">99+</view>
+            <image src="../../static/images/img/one.png" mode="scaleToFill" />
+          </view>
+          <view class="list-item-r">
+            <view class="top">
+              <text class="name">雷电将军</text>
+              <text class="time">上午7:25</text>
+            </view>
+            <view class="news"
+              >这是聊天消息，这是聊天消息，这是聊天消息，这是聊天消息</view
+            >
+          </view>
+        </view>
+      </view>
+    </view>
   </view>
 </template>
 
@@ -25,6 +64,10 @@ import { ref } from "vue";
 </script>
 
 <style lang="scss">
+$tip-lh: 36rpx;
+$name-lh: 50rpx;
+$msg-lh: 40rpx;
+
 .content {
   display: flex;
   flex-direction: column;
@@ -36,6 +79,7 @@ import { ref } from "vue";
   position: fixed;
   top: 0;
   left: 0;
+  z-index: 1;
   width: 100%;
   height: 88rpx;
   background: $uni-bg-color;
@@ -45,9 +89,10 @@ import { ref } from "vue";
   padding-left: $uni-spacing-col-base;
   padding-right: $uni-spacing-col-base;
   box-sizing: border-box;
-  border-bottom: 1px solid $uni-border-color;
+  // border-bottom: 1px solid $uni-border-color;
   .top-bar-left {
     flex: 1;
+    margin-left: 18rpx;
     image {
       width: 68rpx;
       height: 68rpx;
@@ -67,6 +112,76 @@ import { ref } from "vue";
       width: 52rpx;
       height: 52rpx;
       margin: 0 18rpx;
+    }
+  }
+}
+
+.main {
+  padding: 128rpx $uni-spacing-row-base 0;
+}
+.list-item {
+  display: flex;
+  align-items: center;
+  height: 96rpx;
+  padding: 20rpx 0;
+
+  .list-item-l {
+    position: relative;
+    // width: 100%;
+    .tip {
+      position: absolute;
+      top: -6rpx;
+      left: 68rpx;
+      min-width: $tip-lh;
+      height: $tip-lh;
+      padding: 0 4rpx;
+      background: $uni-color-warning;
+      border-radius: calc($tip-lh / 2);
+      font-size: 20rpx;
+      color: $uni-text-color-inverse;
+      line-height: $tip-lh;
+      text-align: center;
+      z-index: 10;
+    }
+    image {
+      width: 96rpx;
+      height: 96rpx;
+      border-radius: 24rpx;
+      background-color: $uni-color-primary;
+    }
+  }
+  .list-item-r {
+    flex: 1;
+    padding-left: $uni-spacing-row-lg;
+    .top {
+      display: flex;
+      align-items: center;
+      height: $name-lh;
+      margin-bottom: 2rpx;
+
+      .name {
+        flex: 1;
+        font-size: 36rpx;
+        color: $uni-text-color;
+        font-weight: 400;
+        line-height: $name-lh;
+      }
+      .time {
+        margin-left: auto;
+        font-size: $uni-font-size-sm;
+        color: $uni-text-color-disable;
+        line-height: $name-lh;
+      }
+    }
+    .news {
+      font-size: $uni-font-size-base;
+      color: $uni-text-color-grey;
+      line-height: $msg-lh;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      -webkit-line-clamp: 1;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
     }
   }
 }
