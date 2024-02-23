@@ -39,19 +39,20 @@
       </view>
       <!-- 好友聊天列表 -->
       <view class="friends-list">
-        <view class="list-item">
+        <view class="list-item" v-for="item in friendsList" :key="item.id">
           <view class="list-item-l">
-            <view class="tip">99+</view>
-            <image src="../../static/images/img/one.png" mode="scaleToFill" />
+            <view class="tip">{{ item.tip }}</view>
+            <image
+              :src="`../../static/images/img/${item.imgUrl}`"
+              mode="scaleToFill"
+            />
           </view>
           <view class="list-item-r">
             <view class="top">
-              <text class="name">雷电将军</text>
-              <text class="time">上午7:25</text>
+              <text class="name">{{ item.name }}</text>
+              <text class="time">{{ formatTime(item.time) }}</text>
             </view>
-            <view class="news"
-              >这是聊天消息，这是聊天消息，这是聊天消息，这是聊天消息</view
-            >
+            <view class="news">{{ item.news }}</view>
           </view>
         </view>
       </view>
@@ -61,9 +62,25 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
+import { onLoad } from "@dcloudio/uni-app";
+import datas from "@/commons/ts/datas";
+import myFun from "@/commons/ts/myFun";
+import type { FriendItem } from "@/typings/datas";
+
+const friendsList = ref<FriendItem[]>([]);
+const { formatTime } = myFun;
+
+// 获取朋友列表消息
+const getFriends = () => {
+  friendsList.value = datas.friends();
+};
+
+onLoad(() => getFriends());
 </script>
 
 <style lang="scss">
+$tb-zIndex: 10;
+$tip-zIndex: 5;
 $tip-lh: 36rpx;
 $name-lh: 50rpx;
 $msg-lh: 40rpx;
@@ -79,7 +96,7 @@ $msg-lh: 40rpx;
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 1;
+  z-index: $tb-zIndex;
   width: 100%;
   height: 88rpx;
   background: $uni-bg-color;
@@ -117,13 +134,16 @@ $msg-lh: 40rpx;
 }
 
 .main {
-  padding: 128rpx $uni-spacing-row-base 0;
+  padding-top: 120rpx;
 }
 .list-item {
   display: flex;
   align-items: center;
   height: 96rpx;
-  padding: 20rpx 0;
+  padding: 16rpx $uni-spacing-row-base;
+  &:active {
+    background-color: $uni-bg-color-grey;
+  }
 
   .list-item-l {
     position: relative;
@@ -141,7 +161,7 @@ $msg-lh: 40rpx;
       color: $uni-text-color-inverse;
       line-height: $tip-lh;
       text-align: center;
-      z-index: 10;
+      z-index: $tip-zIndex;
     }
     image {
       width: 96rpx;
@@ -152,7 +172,7 @@ $msg-lh: 40rpx;
   }
   .list-item-r {
     flex: 1;
-    padding-left: $uni-spacing-row-lg;
+    padding-left: $uni-spacing-row-base;
     .top {
       display: flex;
       align-items: center;
