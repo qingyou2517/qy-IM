@@ -90,6 +90,8 @@ $msg-lh: 40rpx;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  padding-top: var(--status-bar-height);
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
 .top-bar {
@@ -103,13 +105,11 @@ $msg-lh: 40rpx;
   box-shadow: 0px 1px 0px 0px rgba(0, 0, 0, 0.1);
   display: flex;
   align-items: center;
-  padding-left: $uni-spacing-col-base;
-  padding-right: $uni-spacing-col-base;
-  box-sizing: border-box;
-  // border-bottom: 1px solid $uni-border-color;
+  padding-top: var(--status-bar-height);
   .top-bar-left {
     flex: 1;
     margin-left: 18rpx;
+    padding-left: $uni-spacing-col-base;
     image {
       width: 68rpx;
       height: 68rpx;
@@ -118,6 +118,7 @@ $msg-lh: 40rpx;
   }
   .top-bar-center {
     flex: 1;
+    text-align: center;
     image {
       width: 88rpx;
       height: 42rpx;
@@ -125,6 +126,9 @@ $msg-lh: 40rpx;
   }
   .top-bar-right {
     // margin-left: auto;
+    flex: 1;
+    text-align: right;
+    padding-right: $uni-spacing-col-base;
     image {
       width: 52rpx;
       height: 52rpx;
