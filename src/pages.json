@@ -1,4 +1,13 @@
 {
+  "easycom": {
+    "autoscan": true,
+    "custom": {
+      // uview-plus 规则如下配置
+      "^u--(.*)": "uview-plus/components/u-$1/u-$1.vue",
+      "^up-(.*)": "uview-plus/components/u-$1/u-$1.vue",
+      "^u-([^-].*)": "uview-plus/components/u-$1/u-$1.vue"
+    }
+  },
   "pages": [
     //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
     {
@@ -6,6 +15,12 @@
       "style": {
         // "navigationBarTitleText": "uni-app",
         "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/signin/signin",
+      "style": {
+        "navigationBarTitleText": "signin"
       }
     }
   ],

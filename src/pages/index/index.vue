@@ -78,7 +78,7 @@ const getFriends = () => {
 onLoad(() => getFriends());
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 $tb-zIndex: 10;
 $tip-zIndex: 5;
 $tip-lh: 36rpx;
