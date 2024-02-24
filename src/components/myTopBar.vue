@@ -15,6 +15,15 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { onLoad } from "@dcloudio/uni-app";
+
+type Pd = {
+  pl?: string;
+  pr?: string;
+};
+const props = withDefaults(defineProps<Pd>(), {
+  pl: "32rpx",
+  pr: "32rpx",
+});
 </script>
 
 <style lang="scss">
@@ -33,8 +42,7 @@ $tb-zIndex: 10;
   padding-top: var(--status-bar-height);
   .top-bar-left {
     flex: 1;
-    margin-left: 18rpx;
-    padding-left: $uni-spacing-col-base;
+    padding-left: v-bind("props.pl");
   }
   .top-bar-center {
     flex: 1;
@@ -43,8 +51,11 @@ $tb-zIndex: 10;
   .top-bar-right {
     // margin-left: auto;
     flex: 1;
-    text-align: right;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
     padding-right: $uni-spacing-col-base;
+    padding-right: v-bind("props.pr");
   }
 }
 </style>

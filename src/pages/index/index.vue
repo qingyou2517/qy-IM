@@ -1,6 +1,6 @@
 <template>
   <view class="content">
-    <myTopBar class="my-top-bar">
+    <myTopBar pl="50rpx" class="my-top-bar">
       <template #left>
         <image
           class="avatar"
