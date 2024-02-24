@@ -20,7 +20,7 @@
     {
       "path": "pages/signin/signin",
       "style": {
-        "navigationBarTitleText": "signin"
+        "navigationStyle": "custom"
       }
     }
   ],

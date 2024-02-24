@@ -6,7 +6,7 @@ const friends: FriendsFn = () => {
     arr.push({
       id: i,
       imgUrl: "four.png",
-      tip: 2,
+      tip: 999,
       name: `雷电影${i}`,
       time: new Date(),
       news: "海压竹枝低复举，风吹山角晦还明，海压竹枝低复举，风吹山角晦还明，海压竹枝低复举，风吹山角晦还明，海压竹枝低复举，风吹山角晦还明",

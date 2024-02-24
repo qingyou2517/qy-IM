@@ -41,7 +41,9 @@
       <view class="friends-list">
         <view class="list-item" v-for="item in friendsList" :key="item.id">
           <view class="list-item-l">
-            <view class="tip">{{ item.tip }}</view>
+            <view class="tip" v-if="item.tip > 0">{{
+              item.tip >= 100 ? "99+" : item.tip
+            }}</view>
             <image
               :src="`../../static/images/img/${item.imgUrl}`"
               mode="scaleToFill"
@@ -82,6 +84,7 @@ onLoad(() => getFriends());
 $tb-zIndex: 10;
 $tip-zIndex: 5;
 $tip-lh: 36rpx;
+$tip-pd-x: 8rpx;
 $name-lh: 50rpx;
 $msg-lh: 40rpx;
 
@@ -156,9 +159,11 @@ $msg-lh: 40rpx;
       position: absolute;
       top: -6rpx;
       left: 68rpx;
-      min-width: $tip-lh;
+      // 默认是content-box，所以min-width设置的是内容区宽度，增加padding会起到内容区不变，盒子向外扩张的效果
+      // 希望圆形、圆角矩形共存：只需设置 (min-width + 左右padding) = height 即可
+      min-width: calc($tip-lh - $tip-pd-x * 2);
       height: $tip-lh;
-      padding: 0 4rpx;
+      padding: 0 $tip-pd-x;
       background: $uni-color-warning;
       border-radius: calc($tip-lh / 2);
       font-size: 20rpx;
