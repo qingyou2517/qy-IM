@@ -1,22 +1,36 @@
 <template>
   <view class="content">
-    <view class="top-bar">
-      <view class="top-bar-left">
-        <image src="../../static/images/img/four.png" mode="scaleToFill" />
-      </view>
-      <view class="top-bar-center">
-        <image src="../../static/images/index/logo.png" mode="scaleToFill" />
-      </view>
-      <view class="top-bar-right">
+    <myTopBar class="my-top-bar">
+      <template #left>
+        <image
+          class="avatar"
+          src="../../static/images/img/two.png"
+          mode="scaleToFill"
+        />
+      </template>
+      <template #center>
+        <image
+          class="logo"
+          src="../../static/images/index/logo.png"
+          mode="scaleToFill"
+        />
+      </template>
+      <template #right>
         <view>
           <image
+            class="search"
             src="../../static/images/index/search.png"
             mode="scaleToFill"
           />
-          <image src="../../static/images/index/add.png" mode="scaleToFill" />
+          <image
+            class="add"
+            src="../../static/images/index/add.png"
+            mode="scaleToFill"
+          />
         </view>
-      </view>
-    </view>
+      </template>
+    </myTopBar>
+
     <view class="main">
       <!-- 好友请求 -->
       <view class="apply">
@@ -68,6 +82,7 @@ import { onLoad } from "@dcloudio/uni-app";
 import datas from "@/commons/ts/datas";
 import myFun from "@/commons/ts/myFun";
 import type { FriendItem } from "@/typings/datas";
+import myTopBar from "@/components/myTopBar.vue";
 
 const friendsList = ref<FriendItem[]>([]);
 const { formatTime } = myFun;
@@ -97,46 +112,24 @@ $msg-lh: 40rpx;
   padding-bottom: env(safe-area-inset-bottom);
 }
 
-.top-bar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: $tb-zIndex;
-  width: 100%;
-  height: 88rpx;
+.my-top-bar {
   background: $uni-bg-color;
   box-shadow: 0px 1px 0px 0px rgba(0, 0, 0, 0.1);
-  display: flex;
-  align-items: center;
-  padding-top: var(--status-bar-height);
-  .top-bar-left {
-    flex: 1;
-    margin-left: 18rpx;
-    padding-left: $uni-spacing-col-base;
-    image {
-      width: 68rpx;
-      height: 68rpx;
-      border-radius: 16rpx;
-    }
+
+  .avatar {
+    width: 68rpx;
+    height: 68rpx;
+    border-radius: 16rpx;
   }
-  .top-bar-center {
-    flex: 1;
-    text-align: center;
-    image {
-      width: 88rpx;
-      height: 42rpx;
-    }
+  .logo {
+    width: 88rpx;
+    height: 42rpx;
   }
-  .top-bar-right {
-    // margin-left: auto;
-    flex: 1;
-    text-align: right;
-    padding-right: $uni-spacing-col-base;
-    image {
-      width: 52rpx;
-      height: 52rpx;
-      margin: 0 18rpx;
-    }
+  .search,
+  .add {
+    width: 52rpx;
+    height: 52rpx;
+    margin: 0 18rpx;
   }
 }
 
