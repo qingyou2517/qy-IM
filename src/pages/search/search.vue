@@ -7,33 +7,36 @@
         suffixIcon="search"
         suffixIconStyle="color: #909399"
         clearable
+        @change="handleSearch"
       ></u-input>
       <view class="cancel" @click="goBack">取消</view>
     </view>
     <view class="main">
-      <view class="users">
+      <view class="users" v-if="searchList.length > 0">
         <view class="title">用户</view>
         <view class="list">
-          <view class="list-item">
-            <image src="../../static/images/img/one.png" mode="scaleToFill" />
-            <view class="name">心海</view>
+          <view class="list-item" v-for="item in searchList" :key="item.id">
+            <image
+              :src="`../../static/images/img/${item.imgUrl}`"
+              mode="scaleToFill"
+            />
+            <view class="name" v-html="item.name"></view>
             <u-button
               shape="circle"
               size="mini"
               color="#FFE431"
               :customStyle="style1"
+              v-if="item.friendSign === 1"
               >发消息</u-button
             >
-          </view>
-          <view class="list-item">
-            <image src="../../static/images/img/one.png" mode="scaleToFill" />
-            <view class="name">心海</view>
             <u-button
               shape="circle"
               size="mini"
-              color="#FFE431"
-              :customStyle="style1"
-              >发消息</u-button
+              type="primary"
+              plain
+              :customStyle="style2"
+              v-if="item.friendSign === 0"
+              >加好友</u-button
             >
           </view>
         </view>
@@ -60,8 +63,10 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from "vue";
+import { reactive, ref, watch } from "vue";
 import { onLoad } from "@dcloudio/uni-app";
+import datas from "@/commons/ts/datas";
+import type { FriendItem } from "@/typings/datas";
 
 const style1 = reactive({
   width: "120rpx",
@@ -79,6 +84,60 @@ const style2 = reactive({
   background: "rgba(74,170,255,0.10)",
   border: "none",
 });
+// 展示按钮
+const isShowSend = ref(false);
+const isShowAdd = ref(false);
+
+// 显示匹配搜索内容的用户列表
+let searchList = reactive<FriendItem[]>([]);
+// 搜索内容是否能与数据库匹配
+const canMatch = ref(false);
+
+// 寻找与关键词匹配的用户
+const searchUser = (value: string) => {
+  const usersList = datas.friends();
+
+  // 每次调用时，先重置canSearch、searchList[]
+  canMatch.value = false;
+  searchList.length = 0;
+
+  if (value.length > 0) {
+    usersList.forEach((item) => {
+      if (item.name.includes(value)) {
+        canMatch.value = true;
+        isFriend(item); // 判断是否为好友
+        item.name = item.name.replace(
+          value,
+          "<span style='color:#4AAAEF;'>" + value + "</span>"
+        );
+        searchList.push(item);
+      }
+    });
+  }
+  if (!canMatch.value) {
+    searchList.length = 0;
+  }
+};
+
+// 寻找与关键词匹配的群组
+const searchGroup = (value: string) => {};
+
+const handleSearch = (value: string) => {
+  searchUser(value);
+};
+
+// 判断该用户是否为好友: friendSign 为 0 表示否，为 1 表示是
+const friendSign = ref(0);
+function isFriend(item: FriendItem) {
+  friendSign.value = 0;
+  const friendsList = datas.isFriend(); // 数据库保存的好友表
+  friendsList.forEach((obj) => {
+    if (obj.friendId === item.id) {
+      friendSign.value = 1;
+    }
+  });
+  item.friendSign = friendSign.value;
+}
 
 const goBack = () => {
   uni.navigateTo({ url: "/pages/index/index" });
