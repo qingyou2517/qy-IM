@@ -21,6 +21,7 @@
             class="search"
             src="../../static/images/index/search.png"
             mode="scaleToFill"
+            @click="goSearch"
           />
           <image
             class="add"
@@ -93,6 +94,10 @@ const getFriends = () => {
 };
 
 onLoad(() => getFriends());
+
+const goSearch = () => {
+  uni.navigateTo({ url: "/pages/search/search" });
+};
 </script>
 
 <style lang="scss" scoped>
