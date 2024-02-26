@@ -19,8 +19,9 @@
             <image
               :src="`../../static/images/img/${item.imgUrl}`"
               mode="scaleToFill"
+              @click="goUserHome(item.name)"
             />
-            <view class="name" v-html="item.name"></view>
+            <view class="name" v-html="item.newName"></view>
             <u-button
               shape="circle"
               size="mini"
@@ -89,7 +90,7 @@ const isShowSend = ref(false);
 const isShowAdd = ref(false);
 
 // 显示匹配搜索内容的用户列表
-let searchList = reactive<FriendItem[]>([]);
+let searchList = reactive<(FriendItem & { newName: string })[]>([]);
 // 搜索内容是否能与数据库匹配
 const canMatch = ref(false);
 
@@ -102,15 +103,15 @@ const searchUser = (value: string) => {
   searchList.length = 0;
 
   if (value.length > 0) {
-    usersList.forEach((item) => {
+    usersList.forEach((item: FriendItem) => {
       if (item.name.includes(value)) {
         canMatch.value = true;
         isFriend(item); // 判断是否为好友
-        item.name = item.name.replace(
+        const newName = item.name.replace(
           value,
           "<span style='color:#4AAAEF;'>" + value + "</span>"
         );
-        searchList.push(item);
+        searchList.push({ ...item, newName });
       }
     });
   }
@@ -142,6 +143,17 @@ function isFriend(item: FriendItem) {
 const goBack = () => {
   uni.navigateTo({ url: "/pages/index/index" });
 };
+const goUserHome = (name: string) => {
+  // 通过 storage 传递页面 url 参数
+  uni.setStorageSync(
+    "queryObj",
+    JSON.stringify({
+      name,
+      from: "search",
+    })
+  );
+  uni.navigateTo({ url: "/pages/userhome/userhome" });
+};
 </script>
 
 <style lang="scss" scoped>
@@ -151,12 +163,14 @@ $tb-zIndex: 10;
   display: flex;
   flex-direction: column;
   // align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   padding-top: var(--status-bar-height);
   padding-bottom: env(safe-area-inset-bottom);
+  height: 100vh;
 }
 
 .top-bar {
+  padding-top: var(--status-bar-height);
   position: fixed;
   top: 0;
   left: 0;

@@ -62,6 +62,7 @@
             <image
               :src="`../../static/images/img/${item.imgUrl}`"
               mode="scaleToFill"
+              @click="goUserHome(item.name)"
             />
           </view>
           <view class="list-item-r">
@@ -98,6 +99,17 @@ onLoad(() => getFriends());
 const goSearch = () => {
   uni.navigateTo({ url: "/pages/search/search" });
 };
+const goUserHome = (name: string) => {
+  // 通过 storage 传递页面 url 参数
+  uni.setStorageSync(
+    "queryObj",
+    JSON.stringify({
+      name,
+      from: "index",
+    })
+  );
+  uni.navigateTo({ url: "/pages/userhome/userhome" });
+};
 </script>
 
 <style lang="scss" scoped>
@@ -112,9 +124,10 @@ $msg-lh: 40rpx;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   padding-top: var(--status-bar-height);
   padding-bottom: env(safe-area-inset-bottom);
+  height: 100vh;
 }
 
 .my-top-bar {
