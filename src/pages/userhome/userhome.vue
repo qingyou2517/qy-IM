@@ -21,7 +21,7 @@
     </myTopBar>
     <view class="bg">
       <!-- 用作背景跳转动画：白色半透明背景 =》黄色渐变背景 -->
-      <view class="bg-add-friend"></view>
+      <view class="bg-add-friend" :animation="animationData_bgColor"></view>
       <!-- 白色半透明背景图 -->
       <image
         src="../../static/images/img/three.png"
@@ -134,6 +134,7 @@ const animationData = ref({});
 const animationData_btns = ref({});
 const animationData_avatar = ref({});
 const animationData_op = ref({});
+const animationData_bgColor = ref({});
 const addFriendAnimation = () => {
   isClick.value = !isClick.value;
   // 内容区的弹出动画
@@ -156,22 +157,30 @@ const addFriendAnimation = () => {
     duration: 300,
     timingFunction: "ease",
   });
+  // 背景色变化
+  let animation_bgColor = uni.createAnimation({
+    duration: 300,
+    timingFunction: "ease",
+  });
   if (isClick.value) {
     animation.bottom(0).step(); // 弹出到 bottom 为 0 的位置
     animation_btns.bottom(38).step();
     animation_avatar.width(120).height(120).top(60).step();
     animation_op.opacity(0).step();
+    animation_bgColor.backgroundColor("rgba(255,228,49,0.60)").step();
   } else {
     animation.bottom(-999).step(); // 缩回去
     animation_btns.bottom(-999).step();
     animation_avatar.width(240).height(240).top(0).step();
     animation_op.opacity(1).step();
+    animation_bgColor.backgroundColor("rgba(255,228,49,0)").step();
   }
 
   animationData.value = animation.export();
   animationData_btns.value = animation_btns.export();
   animationData_avatar.value = animation_avatar.export();
   animationData_op.value = animation_op.export();
+  animationData_bgColor.value = animation_bgColor.export();
 };
 </script>
 
