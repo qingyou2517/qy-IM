@@ -49,25 +49,58 @@
         <view class="nick">昵称：{{ userData.nickName }}</view>
         <view class="info">{{ userData.signature }}</view>
       </view>
-      <view class="add-friend-button">
-        <u-button type="default" size="large" :customStyle="style1"
-          >加为好友</u-button
-        >
+    </view>
+    <view class="add-friend-button">
+      <u-button type="default" size="large" :customStyle="style1"
+        >加为好友</u-button
+      >
+    </view>
+    <view class="add-friend-msg">
+      <view class="name">{{ userData.name }}</view>
+      <textarea
+        :value="myName + '请求添加好友~'"
+        :maxlength="120"
+        class="add-main"
+      ></textarea>
+    </view>
+    <view class="btns">
+      <view class="close">
+        <u-button :customStyle="close_style">取消</u-button>
+      </view>
+      <view class="send">
+        <u-button :customStyle="send_style">发送</u-button>
       </view>
     </view>
   </view>
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from "vue";
+import { reactive, ref, getCurrentInstance, onMounted } from "vue";
 import { onLoad } from "@dcloudio/uni-app";
 import myTopBar from "@/components/myTopBar.vue";
 
+let _this = getCurrentInstance();
+
+// 按钮自定义样式
 const style1 = reactive({
   color: "$uni-text-color",
   background: "#FFE431",
   fontSize: "32rpx",
   fontWeight: "400",
+});
+const close_style = reactive({
+  width: "172rpx",
+  height: "80rpx",
+  background: "rgba(39,40,50,0.10)",
+  borderRadius: "10rpx",
+  fontSize: "32rpx",
+});
+const send_style = reactive({
+  flex: "1",
+  height: "80rpx",
+  background: "#FFE431",
+  borderRadius: "10rpx",
+  fontSize: "32rpx",
 });
 
 // 用户数据
@@ -76,6 +109,7 @@ const userData = reactive({
   nickName: "小影",
   signature: "温柔要有，但不是妥协，在安静中，不慌不忙的坚强。",
 });
+const myName = ref("青游");
 
 const goBack = () => {
   uni.navigateBack({ delta: 1 });
@@ -85,6 +119,24 @@ onLoad((e: AnyObject | undefined) => {
   const queryObj = JSON.parse(uni.getStorageSync("queryObj"));
   userData.name = queryObj.name;
 });
+
+// 获取节点信息
+let getElementStyle = () => {
+  const query = uni.createSelectorQuery().in(_this);
+  query
+    .select(".bg")
+    .boundingClientRect((data) => {
+      console.log("得到布局位置信息" + JSON.stringify(data));
+      // console.log("节点离页面顶部的距离为" + data.top);
+      // let newdata = JSON.parse(JSON.stringify(data));
+      // yaoHei.value = yaoHei.value - newdata.height;
+    })
+    .exec();
+};
+
+onMounted(() => {
+  getElementStyle();
+});
 </script>
 
 <style lang="scss" scoped>
@@ -92,6 +144,7 @@ $bg-zIndex: -2;
 $bg-img-zIndex: -1;
 $avatar-zIndex: 10;
 $gender-zIndex: 15;
+$add-friend-zIndex: 90;
 .content {
   display: flex;
   flex-direction: column;
@@ -205,9 +258,62 @@ $gender-zIndex: 15;
       font-weight: 200;
     }
   }
-  .add-friend-button {
-    width: calc(100% - 64rpx);
-    margin-bottom: 76rpx;
+}
+
+.add-friend-button {
+  position: fixed;
+  bottom: 76rpx;
+  width: calc(100% - 64rpx);
+}
+
+// 发送添加好友请求相关
+.add-friend-msg {
+  position: fixed;
+  bottom: 0rpx;
+  width: 100%;
+  height: 75%;
+  background: #ffffff;
+  border-radius: 40rpx 40rpx 0rpx 0rpx;
+  box-sizing: border-box;
+  padding: 0 56rpx;
+
+  .name {
+    padding-top: 168rpx;
+    padding-bottom: 40rpx;
+    height: 74rpx;
+    font-size: 52rpx;
+    color: #272832;
+    letter-spacing: -0.89rpx;
+    font-weight: 400;
+  }
+  .add-main {
+    box-sizing: border-box;
+    padding: 18rpx 22rpx;
+    width: 100%;
+    height: 40%;
+    line-height: 44rpx;
+    background: #f3f4f6;
+    border-radius: 20rpx;
+    font-size: 32rpx;
+    color: #272832;
+    letter-spacing: -0.55rpx;
+    font-weight: 400;
+  }
+}
+.btns {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  padding: 94rpx 32rpx 0;
+  position: fixed;
+  bottom: 76rpx;
+  width: 100%;
+  .close {
+    margin-right: 32rpx;
+  }
+  .send {
+    flex: 1;
   }
 }
 </style>
