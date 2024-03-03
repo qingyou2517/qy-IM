@@ -31,8 +31,8 @@
     </view>
 
     <view class="main">
-      <view class="user-head">
-        <view class="gender">
+      <view class="user-head" :animation="animationData_avatar">
+        <view class="gender" :animation="animationData_op">
           <image
             src="../../static/images/userhome/female.png"
             mode="aspectFill"
@@ -44,18 +44,23 @@
           mode="aspectFill"
         />
       </view>
-      <view class="user-info">
+      <view class="user-info" :animation="animationData_op">
         <view class="name">{{ userData.name }}</view>
         <view class="nick">昵称：{{ userData.nickName }}</view>
         <view class="info">{{ userData.signature }}</view>
       </view>
     </view>
     <view class="add-friend-button">
-      <u-button type="default" size="large" :customStyle="style1"
+      <u-button
+        type="default"
+        size="large"
+        :customStyle="style1"
+        @click="addFriendAnimation"
         >加为好友</u-button
       >
     </view>
-    <view class="add-friend-msg">
+    <!-- 点击"添加好友"按钮后，弹出以下页面元素 -->
+    <view class="add-friend-msg" :animation="animationData">
       <view class="name">{{ userData.name }}</view>
       <textarea
         :value="myName + '请求添加好友~'"
@@ -63,9 +68,11 @@
         class="add-main"
       ></textarea>
     </view>
-    <view class="btns">
+    <view class="btns" :animation="animationData_btns">
       <view class="close">
-        <u-button :customStyle="close_style">取消</u-button>
+        <u-button :customStyle="close_style" @click="addFriendAnimation"
+          >取消</u-button
+        >
       </view>
       <view class="send">
         <u-button :customStyle="send_style">发送</u-button>
@@ -75,7 +82,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, getCurrentInstance, onMounted } from "vue";
+import { reactive, ref, getCurrentInstance } from "vue";
 import { onLoad } from "@dcloudio/uni-app";
 import myTopBar from "@/components/myTopBar.vue";
 
@@ -87,6 +94,7 @@ const style1 = reactive({
   background: "#FFE431",
   fontSize: "32rpx",
   fontWeight: "400",
+  height: "80rpx",
 });
 const close_style = reactive({
   width: "172rpx",
@@ -120,23 +128,51 @@ onLoad((e: AnyObject | undefined) => {
   userData.name = queryObj.name;
 });
 
-// 获取节点信息
-let getElementStyle = () => {
-  const query = uni.createSelectorQuery().in(_this);
-  query
-    .select(".bg")
-    .boundingClientRect((data) => {
-      console.log("得到布局位置信息" + JSON.stringify(data));
-      // console.log("节点离页面顶部的距离为" + data.top);
-      // let newdata = JSON.parse(JSON.stringify(data));
-      // yaoHei.value = yaoHei.value - newdata.height;
-    })
-    .exec();
-};
+// 点击 "添加好友" 时的页面切换动画
+const isClick = ref(false);
+const animationData = ref({});
+const animationData_btns = ref({});
+const animationData_avatar = ref({});
+const animationData_op = ref({});
+const addFriendAnimation = () => {
+  isClick.value = !isClick.value;
+  // 内容区的弹出动画
+  let animation = uni.createAnimation({
+    duration: 300,
+    timingFunction: "ease",
+  });
+  // 按钮的弹出动画
+  let animation_btns = uni.createAnimation({
+    duration: 300,
+    timingFunction: "ease-in-out",
+  });
+  // 头像的弹出动画
+  let animation_avatar = uni.createAnimation({
+    duration: 300,
+    timingFunction: "ease",
+  });
+  // 透明度变化的弹出动画
+  let animation_op = uni.createAnimation({
+    duration: 300,
+    timingFunction: "ease",
+  });
+  if (isClick.value) {
+    animation.bottom(0).step(); // 弹出到 bottom 为 0 的位置
+    animation_btns.bottom(38).step();
+    animation_avatar.width(120).height(120).top(60).step();
+    animation_op.opacity(0).step();
+  } else {
+    animation.bottom(-999).step(); // 缩回去
+    animation_btns.bottom(-999).step();
+    animation_avatar.width(240).height(240).top(0).step();
+    animation_op.opacity(1).step();
+  }
 
-onMounted(() => {
-  getElementStyle();
-});
+  animationData.value = animation.export();
+  animationData_btns.value = animation_btns.export();
+  animationData_avatar.value = animation_avatar.export();
+  animationData_op.value = animation_op.export();
+};
 </script>
 
 <style lang="scss" scoped>
@@ -208,6 +244,7 @@ $add-friend-zIndex: 90;
       height: 100%;
       z-index: $avatar-zIndex;
       border-radius: 48rpx;
+      box-shadow: 0px 36rpx 40rpx 0px rgba(39, 40, 50, 0.1);
     }
     .gender {
       position: absolute;
@@ -269,7 +306,7 @@ $add-friend-zIndex: 90;
 // 发送添加好友请求相关
 .add-friend-msg {
   position: fixed;
-  bottom: 0rpx;
+  bottom: -75%;
   width: 100%;
   height: 75%;
   background: #ffffff;
@@ -307,7 +344,7 @@ $add-friend-zIndex: 90;
   box-sizing: border-box;
   padding: 94rpx 32rpx 0;
   position: fixed;
-  bottom: 76rpx;
+  bottom: -104rpx;
   width: 100%;
   .close {
     margin-right: 32rpx;
